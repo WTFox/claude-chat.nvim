@@ -14,7 +14,6 @@ M.defaults = {
 		title_pos = "center",
 	},
 	keymaps = {
-		global = nil, -- Global keymap for ClaudeChat command (nil = no default, set in your config)
 		terminal = {
 			close = "<C-q>", -- Close chat from terminal mode
 			toggle = "<C-q>", -- Toggle chat window visibility

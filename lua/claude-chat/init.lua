@@ -8,15 +8,6 @@ local window = require "claude-chat.window"
 function M.setup(opts)
 	config.setup(opts)
 
-	-- Set up global keymap if configured
-	local options = config.get()
-	if options.keymaps.global then
-		vim.keymap.set({ "n", "v" }, options.keymaps.global, ":ClaudeChat<CR>", {
-			desc = "Toggle Claude Chat",
-			silent = true,
-		})
-	end
-
 	vim.api.nvim_create_user_command("ClaudeChat", function(cmd_opts)
 		if cmd_opts.args and cmd_opts.args ~= "" then
 			M.ask_claude(cmd_opts.args, cmd_opts.range, cmd_opts.line1, cmd_opts.line2)

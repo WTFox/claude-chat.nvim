@@ -12,7 +12,6 @@
 ---@field interrupt string
 
 ---@class claude-chat.Config.Keymaps
----@field global string
 ---@field terminal TerminalKeymaps
 
 ---@class claude-chat.Config

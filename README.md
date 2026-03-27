@@ -40,6 +40,9 @@ https://github.com/user-attachments/assets/a91b3a0d-03bc-4810-b83a-c629bcf8cd46
 {
   "wtfox/claude-chat.nvim",
   config = true,
+  keys = {
+    { "<leader>cc", ":ClaudeChat<CR>", mode = { "n", "v" }, desc = "Toggle Claude Chat" },
+  },
   opts = {
     -- Optional configuration
     split = "vsplit",      -- "vsplit", "split", or "float"
@@ -53,13 +56,6 @@ https://github.com/user-attachments/assets/a91b3a0d-03bc-4810-b83a-c629bcf8cd46
       title = " Claude Chat ",
       title_pos = "center",
     },
-    -- keymaps = {  -- customize if needed
-    --   global = "<leader>cc",
-    --   terminal = {
-    --     close = "<C-q>",
-    --     toggle = "<C-.>",
-    --   },
-    -- },
   },
 }
 ```
@@ -98,7 +94,6 @@ The plugin intelligently adapts based on your input, text selection, and current
 
 | Command | Description |
 |---------|-------------|
-| `<C-.>` | **Recommended**: Toggle Claude Chat (start/hide/show) |
 | `:ClaudeChat` | Interactive prompt or toggle if session active |
 | `:ClaudeChat <prompt>` | Direct command without dialog |
 
@@ -114,8 +109,7 @@ The plugin intelligently adapts based on your input, text selection, and current
 #### Terminal Mode (works anytime)
 | Key | Action |
 |-----|--------|
-| `<C-q>` | Quick close the chat |
-| `<C-.>` | Toggle window visibility |
+| `<C-q>` | Close or toggle window visibility |
 | `<C-f>` | Insert current filename into input |
 | `<C-c>` | Exit Claude Chat |
 | `<Esc><Esc>` | Exit to normal mode |
@@ -174,50 +168,28 @@ Skip the dialog and send commands directly.
 <summary><strong>🔄 Toggle Window Visibility</strong></summary>
 
 ```
-1. Start a Claude session: <C-.> → "help me debug this"
-2. Hide the window: <C-.> → (no prompt, just press Enter)
-3. Restore the window: <C-.> → (no prompt, just press Enter)
+1. Start a Claude session: <leader>cc → "help me debug this"
+2. Hide the window: <leader>cc → (no prompt, just press Enter)
+3. Restore the window: <leader>cc → (no prompt, just press Enter)
 ```
 Perfect for quickly hiding/showing Claude while preserving your conversation.
-
-**Using the Recommended Setup:**
-With `<C-.>` configured as your keymap, you get consistent behavior:
-- From anywhere: `<C-.>` starts Claude or toggles if running
-- In the terminal: `<C-.>` toggles window visibility
-- One key for all Claude interactions!
 </details>
 
 ## ⚙️ Configuration
 
 ### 🌟 Recommended Configuration
 
-For the best experience, we recommend this simple setup. The `<C-.>` keymap is automatically configured:
-
 ```lua
 {
   "wtfox/claude-chat.nvim",
   config = true,
-}
-```
-
-This gives you:
-- `<C-.>` to start/toggle Claude from anywhere
-- `<C-.>` to hide/show the window when active
-- `<C-.>` inside the terminal to toggle visibility
-- Consistent keymap across all contexts
-
-**Disable Auto-Keymap:**
-```lua
-{
-  "wtfox/claude-chat.nvim",
-  opts = {
-    keymaps = {
-      global = nil, -- Disable automatic keymap setup
-    },
+  keys = {
+    { "<leader>cc", ":ClaudeChat<CR>", mode = { "n", "v" }, desc = "Toggle Claude Chat" },
   },
 }
 ```
-Then set up your own keymaps manually with `:ClaudeChat`.
+
+No global keymap is set by default — use lazy's `keys` spec to define one. Use `:ClaudeChat` directly if you prefer no keymap.
 
 ### Full Configuration Options
 
@@ -237,10 +209,9 @@ require('claude-chat').setup({
     title_pos = "center", -- "left", "center", "right"
   },
   keymaps = {
-    global = "<C-.>", -- Global keymap for ClaudeChat command (set to nil to disable)
     terminal = {      -- Terminal mode keybindings
       close = "<C-q>",           -- Close chat from terminal mode
-      toggle = "<C-.>",          -- Toggle chat window visibility
+      toggle = "<C-q>",          -- Toggle chat window visibility
       normal_mode = "<Esc><Esc>", -- Exit terminal mode to normal mode
       insert_file = "<C-f>",     -- Insert current file path
       interrupt = "<C-c>",       -- Interrupt/close chat
