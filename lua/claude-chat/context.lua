@@ -36,7 +36,7 @@ function M.format_prompt(context, user_input, has_range)
 			table.insert(
 				prompt_parts,
 				string.format(
-					"File %s (lines %d-%d). ",
+					"File: %s (lines %d-%d). ",
 					filename,
 					context.line_start,
 					context.line_end

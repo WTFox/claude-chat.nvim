@@ -88,15 +88,28 @@ function M.restore_chat_window()
 	-- If window exists but is showing a different buffer, reset window state
 	if state_data.win and vim.api.nvim_win_is_valid(state_data.win) then
 		if vim.api.nvim_win_get_buf(state_data.win) ~= state_data.buf then
-			state.get().win = nil  -- Reset so create_chat_window creates a new split
+			state.get().win = nil -- Reset so create_chat_window creates a new split
 		end
 	end
 
 	local options = config.get()
 	if options.split == "float" then
-		M.create_float_window()
-		local win = state.get().win
-		vim.api.nvim_win_set_buf(win, state_data.buf)
+		local width = vim.o.columns
+		local height = vim.o.lines
+		local float_width = math.floor(width * options.width)
+		local float_height = math.floor(height * options.height)
+		local row = math.floor((height - float_height) / 2)
+		local col = math.floor((width - float_width) / 2)
+		local float_opts = vim.tbl_deep_extend("force", {
+			relative = "editor",
+			width = float_width,
+			height = float_height,
+			row = row,
+			col = col,
+			style = "minimal",
+		}, options.float_opts or {})
+		local win = vim.api.nvim_open_win(state_data.buf, true, float_opts)
+		state.get().win = win
 	else
 		M.create_chat_window()
 		local win = state.get().win
@@ -118,7 +131,9 @@ function M.setup_file_watcher()
 	vim.o.updatetime = 100
 	vim.o.autoread = true
 
+	local group = vim.api.nvim_create_augroup("ClaudeChatFileWatcher", { clear = true })
 	vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI", "FocusGained", "BufEnter" }, {
+		group = group,
 		callback = function()
 			vim.cmd "checktime"
 		end,
@@ -176,7 +191,7 @@ function M.start_claude_terminal(prompt)
 
 	vim.bo[buf].bufhidden = "hide"
 	vim.bo[buf].buflisted = false
-	vim.api.nvim_win_set_option(win, "statusline", " ")
+	vim.wo[win].statusline = " "
 
 	vim.cmd "stopinsert"
 

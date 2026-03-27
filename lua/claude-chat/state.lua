@@ -22,6 +22,8 @@ function M.reset()
 	state.original_win = nil
 	state.original_buf = nil
 	state.hidden = false
+	state.timer = nil
+	state.original_updatetime = nil
 end
 
 function M.set_terminal_info(buf, win, job_id)
@@ -63,8 +65,11 @@ function M.is_session_active()
 end
 
 function M.is_window_visible()
-	return state.win ~= nil and vim.api.nvim_win_is_valid(state.win) and not state.hidden
-		and state.buf ~= nil and vim.api.nvim_buf_is_valid(state.buf)
+	return state.win ~= nil
+		and vim.api.nvim_win_is_valid(state.win)
+		and not state.hidden
+		and state.buf ~= nil
+		and vim.api.nvim_buf_is_valid(state.buf)
 		and vim.api.nvim_win_get_buf(state.win) == state.buf
 end
 

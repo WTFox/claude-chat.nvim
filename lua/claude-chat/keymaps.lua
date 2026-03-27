@@ -108,6 +108,14 @@ function M.setup_terminal_keymaps()
 		desc = "Exit terminal insert mode",
 	})
 
+	-- Apply terminal window appearance immediately (TermOpen has already fired)
+	local win = state_data.win
+	if win and vim.api.nvim_win_is_valid(win) then
+		vim.wo[win].number = false
+		vim.wo[win].relativenumber = false
+		vim.wo[win].signcolumn = "no"
+	end
+
 	-- Set up auto-commands for better UX
 	M.setup_terminal_autocmds(buf)
 end
@@ -127,18 +135,6 @@ function M.setup_terminal_autocmds(buf)
 			end
 		end,
 		desc = "Auto-enter insert mode in Claude terminal",
-	})
-
-	-- Set terminal-specific options
-	vim.api.nvim_create_autocmd("TermOpen", {
-		buffer = buf,
-		callback = function()
-			-- Make the terminal more responsive
-			vim.wo.number = false
-			vim.wo.relativenumber = false
-			vim.wo.signcolumn = "no"
-		end,
-		desc = "Configure Claude terminal appearance",
 	})
 end
 
